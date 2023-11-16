@@ -16,15 +16,27 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/campgrounds", async (req, res) => {
   const campgrounds = await Campground.find({});
   res.render("campground/index", { campgrounds });
 });
 
-app.get("/make-campground", async (req, res) => {
-  const camp = new Campground({ title: "My Backyard", price: 3 });
-  await camp.save();
-  res.send(camp);
+app.get("/campgrounds/new", (req, res) => {
+  res.render("campground/new");
+});
+
+app.post("/campgrounds", async (req, res) => {
+  const newCampground = new Campground(req.body.campground);
+  await newCampground.save();
+  res.redirect(`/campgrounds/${newCampground._id}`);
+});
+
+app.get("/campgrounds/:id", async (req, res) => {
+  const { id } = req.params;
+  const campground = await Campground.findById(id);
+  res.render("campground/show", { campground });
 });
 
 app.listen(3000, () => {
