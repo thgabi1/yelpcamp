@@ -27,6 +27,10 @@ app.get("/campgrounds", async (req, res) => {
   res.render("campground/index", { campgrounds });
 });
 
+app.get("/", (req, res) => {
+  res.render("campground/home");
+});
+
 app.get("/campgrounds/new", (req, res) => {
   res.render("campground/new");
 });
